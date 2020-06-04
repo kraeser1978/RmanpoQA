@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.page;
 
 public class AddPassportPage {
-    String passportSeria = "//span[text()='Серия']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
+    public static String passportSeria = "//span[text()='Серия']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
     String passportNumber = "//span[text()='Номер']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
     String passportDateOfIssue = "//span[text()='Дата выдачи']//parent::td/following-sibling::td/span/input[contains(@class,'datebox')]";
     String passportDivisionCode = "//span[text()='Код подразделения']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
@@ -23,7 +23,6 @@ public class AddPassportPage {
         $(By.xpath("//span[text()='Необходимо прикрепить отсканированный паспорт, содержащий основную страницу и страницу с пропиской']"))
                 .shouldBe(Condition.visible);
     }
-
 
     public AddPassportPage setPassportSeria(){
         $(By.xpath(passportSeria)).shouldBe(Condition.enabled).setValue("4604");
@@ -63,6 +62,8 @@ public class AddPassportPage {
     public AddPassportPage selectUploadFile(String fullFileName){
         File file = new File(fullFileName);
         $(By.xpath(uploadPath)).uploadFile(file);
+        //ждем окончания загрузки файла
+        $(By.xpath("//span[contains(text(),'Размер файла')]")).waitWhile(Condition.visible,7000);
         return this;
     }
 
