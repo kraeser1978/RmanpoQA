@@ -9,12 +9,35 @@ public class StudentPersonalCasePage {
     String editCase = "(//button[@title='Изменить личное дело'])[1]";
     String cancelCaseEdit = "//button[@title='Отменить изменения']";
     String saveCase = "(//button[@title='Сохранить изменения'])[1]";
-    String campus = "//span[text()='Общежитие']//parent::div/following-sibling::div/span/input[contains(@class,'combobox-input')]";
+//    String campus = "//span[text()='Общежитие']//parent::div/following-sibling::div/span/input[contains(@class,'combobox-input')]";
+    String campus = "//span[text()='Общежитие']//parent::div/following-sibling::div/span/input";
+    String family = "//span[text()='Фамилия']//parent::div/following-sibling::div/input";
 
     public StudentPersonalCasePage(){
         switchTo().window(1);
         //ждем окончания загрузки страницы
         $(By.xpath(editCase)).waitUntil(Condition.enabled,7000);
+    }
+
+    public String getFamilyName(){
+        String familyNameValue = $(By.xpath(family)).getAttribute("value");
+        return familyNameValue;
+    }
+
+    public StudentPersonalCasePage setFamilyName(String familyName){
+        $(By.xpath(family)).setValue(familyName);
+        System.out.println("задаем поле Фамилия = " + familyName);
+        return this;
+    }
+
+    public StudentPersonalCasePage isCampusAdded(String expectedCampusName){
+        String actualCampusName = $(By.xpath(campus)).getAttribute("value");
+        if (actualCampusName.contains(expectedCampusName)) System.out.println("Значение поля Общежитие совпало с ранее введенным");
+        else {
+            System.out.println("ОШИБКА: значение поля Общежитие отличается от ожидаемого:");
+            System.out.println("Ожидаемое = " + expectedCampusName + " ,фактическое = " + actualCampusName);
+        }
+        return this;
     }
 
     public PersonaInfoPage switchToPersonaInfoTab(){
@@ -39,6 +62,8 @@ public class StudentPersonalCasePage {
 
     public StudentPersonalCasePage clickCancelCaseEditButton(){
         $(By.xpath(cancelCaseEdit)).click();
+        //ждем, когда поле станет закрытым для редактирования
+        $(By.xpath(campus)).shouldHave(Condition.disabled);
         return this;
     }
 
@@ -52,8 +77,10 @@ public class StudentPersonalCasePage {
         return campusValue ;
     }
 
-    public void setCampus(String campusName){
+    public StudentPersonalCasePage setCampus(String campusName){
         $(By.xpath(campus)).setValue(campusName);
+        System.out.println("задаем поле Общежитие = " + campusName);
+        return this;
     }
 
 

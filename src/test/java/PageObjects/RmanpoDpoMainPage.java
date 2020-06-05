@@ -25,6 +25,7 @@ public class RmanpoDpoMainPage {
     }
 
     public RmanpoDpoMainPage clickAllStudentsLink(){
+        AllStudentsLink.shouldBe(Condition.visible);
         AllStudentsLink.shouldBe(Condition.enabled).click();
         return this;
     }

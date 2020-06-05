@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 
 import java.io.File;
 
+import static PageObjects.PersonalCase.IdentityDocsPage.fileLoadedText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.page;
 
@@ -59,16 +60,18 @@ public class AddPassportPage {
         return this;
     }
 
-    public AddPassportPage selectUploadFile(String fullFileName){
+    public AddPassportPage selectUploadFile(String fullFileName) throws InterruptedException {
         File file = new File(fullFileName);
         $(By.xpath(uploadPath)).uploadFile(file);
         //ждем окончания загрузки файла
         $(By.xpath("//span[contains(text(),'Размер файла')]")).waitWhile(Condition.visible,7000);
+        Thread.sleep(1000);
         return this;
     }
 
     public IdentityDocsPage clickSaveButton(){
         $(By.xpath(saveButton)).shouldBe(Condition.enabled).click();
+        $(By.xpath(fileLoadedText)).shouldBe(Condition.visible);
         return page(IdentityDocsPage.class);
     }
 }

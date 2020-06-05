@@ -33,13 +33,13 @@ Git:
 - В GitBash введите следующую команду:
 git clone https://github.com/kraeser1978/RmanpoQA.git
 команда закачивает содержимое репозитария в созданную подпапку
-- После окончания выполнения команды, зайдите в папку и убедитесь, что файлы были закачаны в нее
+- После окончания выполнения команды зайдите в папку и убедитесь, что файлы были закачаны в нее
 
 IntellijIdea:
 - Запустите IntellijIdea, выберите Open Project, выберите созданную папку с закачанными файлами кода
 - В главном меню IntellijIdea слева выберите вертикальную вкладку Maven Projects, в ней нажмите кнопку +, выберите папку с файлами, укажите файл pom.xml
 - В главном меню IntellijIdea зайдите File - Settings - Build Execution Deployment - Build Tools - Maven - в поле User Settings File нажмите Override и выберите /conf/settings.xml в папке с Apache Maven
-- Убедитесь, что в поле Local repository подгрузилось имя папки библиотек java, прописанная в settings.xml
+- Убедитесь, что в поле Local repository подгрузилось имя папки библиотек java, прописанное в settings.xml
 - В подокне Maven Projects выберите RMANPO - Install, нажмите кнопку Run Maven Build в верхнем меню
 - Проверьте, что файлы библиотек java закачиваются в папку библиотек
 
@@ -53,16 +53,16 @@ IntellijIdea:
 
 Правка файла rmanpo.properties:
 - Задайте значения для следующих параметров проекта в файле
-ВАЖНО: разделители в именах папок в Windows указываются с двойными слэшами - см образец в скачанном файле rmanpo.properties
+- ВАЖНО: разделители в именах папок в Windows указываются с двойными слэшами - см образец в скачанном файле rmanpo.properties
 
-driver_path = полный путь к файлу chromedriver.exe
-log_file_path = полное имя лог файла
-screenshots_folder = полный путь к папке для хранения скриншотов ошибок
-passport_scan_file_path = полный путь к файлу со сканом паспорта
-snils_scan_file_path = полный путь к файлу со сканом СНИЛС
-rmanpo_url = ссылка на приложение РМАНПО
-user_name = имя пользователя РМАНПО
-password = пароль пользователя
+- driver_path = полный путь к файлу chromedriver.exe
+- log_file_path = полное имя лог файла
+- screenshots_folder = полный путь к папке для хранения скриншотов ошибок
+- passport_scan_file_path = полный путь к файлу со сканом паспорта
+- snils_scan_file_path = полный путь к файлу со сканом СНИЛС
+- rmanpo_url = ссылка на приложение РМАНПО
+- user_name = имя пользователя РМАНПО
+- password = пароль пользователя
 
 
 
