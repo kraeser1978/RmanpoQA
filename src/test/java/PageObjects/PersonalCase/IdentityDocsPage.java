@@ -5,11 +5,15 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static PageObjects.PersonalCase.AddPassportPage.passportSeria;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.page;
 
 public class IdentityDocsPage {
+    private static Logger logger = Logger.getLogger(IdentityDocsPage.class.getSimpleName());
     String addDocs = "(//span[text()='Добавить документ'])[1]";
     String residenceText = "(//span[contains(text(),'Заполните поле \"Гражданство\"')])[1]";
     public static String fileLoadedText = "//span[text()='Загруженные файлы']";
@@ -21,8 +25,8 @@ public class IdentityDocsPage {
 
     public IdentityDocsPage isDocRemoved(){
         boolean flag = $(By.xpath(fileLoadedText)).isDisplayed();
-        if (flag) System.out.println("ОШИБКА: Паспортные данные не были удалены");
-        else System.out.println("Паспортные данные успешно удалены");
+        if (flag) logger.log(Level.SEVERE,"ОШИБКА: Паспортные данные не были удалены");
+        else logger.log(Level.INFO,"Паспортные данные успешно удалены");
         return this;
     }
 
@@ -52,19 +56,19 @@ public class IdentityDocsPage {
         //берем краткое имя прикрепленного файла
         int startPos = passportFileName.lastIndexOf("\\");
         String fileShortName = passportFileName.substring(startPos+1);
-        //заменяем имя файла в стркое шаблона на фактическое
+        //заменяем имя файла в строке шаблона на фактическое
         passportAdded = passportAdded.replace("passport_SKraevskiy_02.pdf",fileShortName);
-        //проверяем отображения серии паспорта на вкладке Документы, удостоверяющие личность
+        logger.log(Level.INFO,"проверяем отображения серии паспорта на вкладке Документы, удостоверяющие личность");
         boolean isPassportSeriaDisplayed = $(By.xpath(passportSeria)).isDisplayed();
         if (isPassportSeriaDisplayed) {
             String passportSeriaActualValue = $(By.xpath(passportSeria)).getAttribute("value");
-            if (!passportSeriaActualValue.isEmpty()) System.out.println("Паспортные данные были добавлены к личному делу студента");
+            if (!passportSeriaActualValue.isEmpty()) logger.log(Level.INFO,"Паспортные данные были добавлены к личному делу студента");
         }
-        else System.out.println("ОШИБКА: Паспортные данные не добавлены");
-        //проверка отображения краткого имени файла
+        else logger.log(Level.SEVERE,"ОШИБКА: Паспортные данные не добавлены");
+        logger.log(Level.INFO,"проверка отображения краткого имени файла...");
         boolean isFileNameDisplayed = $(By.xpath(passportAdded)).isDisplayed();
-        if (isFileNameDisplayed) System.out.println("Скан паспорта был успешно добавлен");
-        else System.out.println("ОШИБКА: скан паспорта не добавлен");
+        if (isFileNameDisplayed) logger.log(Level.INFO,"Скан паспорта был успешно добавлен");
+        else logger.log(Level.SEVERE,"ОШИБКА: скан паспорта не добавлен");
         return this;
     }
 }

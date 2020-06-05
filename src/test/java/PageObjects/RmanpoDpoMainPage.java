@@ -6,9 +6,12 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
+import java.util.logging.Logger;
+
 import static com.codeborne.selenide.Selenide.page;
 
 public class RmanpoDpoMainPage {
+    private static Logger logger = Logger.getLogger(RmanpoDpoMainPage.class.getSimpleName());
 
     @FindBy(how = How.XPATH, using = "//span[text()='Контингент ДПО']")
     private SelenideElement ContingentDpoLink;

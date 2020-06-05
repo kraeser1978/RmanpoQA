@@ -4,12 +4,15 @@ import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static PageObjects.PersonalCase.IdentityDocsPage.fileLoadedText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.page;
 
 public class AddPassportPage {
+    private static Logger logger = Logger.getLogger(AddPassportPage.class.getSimpleName());
     public static String passportSeria = "//span[text()='Серия']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
     String passportNumber = "//span[text()='Номер']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
     String passportDateOfIssue = "//span[text()='Дата выдачи']//parent::td/following-sibling::td/span/input[contains(@class,'datebox')]";
@@ -63,7 +66,7 @@ public class AddPassportPage {
     public AddPassportPage selectUploadFile(String fullFileName) throws InterruptedException {
         File file = new File(fullFileName);
         $(By.xpath(uploadPath)).uploadFile(file);
-        //ждем окончания загрузки файла
+        logger.log(Level.INFO,"ждем окончания загрузки файла...");
         $(By.xpath("//span[contains(text(),'Размер файла')]")).waitWhile(Condition.visible,7000);
         Thread.sleep(1000);
         return this;

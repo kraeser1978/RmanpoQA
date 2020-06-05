@@ -1,5 +1,6 @@
 package Common;
 
+import PageObjects.PersonalCase.AddPassportPage;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.io.FileUtils;
@@ -18,6 +19,7 @@ import java.util.logging.SimpleFormatter;
 import static com.codeborne.selenide.WebDriverRunner.closeWebDriver;
 
 public class RegressionTest {
+    private static Logger logger = Logger.getLogger(RegressionTest.class.getSimpleName());
     protected static WebDriver driver;
     static FileHandler fh = null;
 
@@ -29,7 +31,7 @@ public class RegressionTest {
         logInit(props.logFilePath());
         //задаем путь к файлам скриншотов с ошибками в ходе выполнения тестов
         Configuration.reportsFolder = props.screenshotsFolder();
-        //прибываем процесс, если он остался от предыдущей сессии
+        logger.log(Level.INFO,"прибиваем chromedriver.exe процесс, если он остался от предыдущей сессии");
         Process process = Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe");
         process.waitFor();
         process.destroy();
@@ -46,6 +48,7 @@ public class RegressionTest {
         options.addArguments("--disable-default-apps");
         options.addArguments("--enable-precise-memory-info");
         System.setProperty("webdriver.chrome.driver",props.driverPath());
+        logger.log(Level.INFO,"запускаем Хром...");
         driver = new ChromeDriver(options);
         WebDriverRunner.setWebDriver(driver);
     }
