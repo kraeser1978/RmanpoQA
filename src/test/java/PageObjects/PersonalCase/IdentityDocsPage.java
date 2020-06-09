@@ -1,5 +1,6 @@
 package PageObjects.PersonalCase;
 
+import Common.RegressionTest;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -12,7 +13,7 @@ import static PageObjects.PersonalCase.AddPassportPage.passportSeria;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.page;
 
-public class IdentityDocsPage {
+public class IdentityDocsPage extends RegressionTest {
     private static Logger logger = Logger.getLogger(IdentityDocsPage.class.getSimpleName());
     String addDocs = "(//span[text()='Добавить документ'])[1]";
     String residenceText = "(//span[contains(text(),'Заполните поле \"Гражданство\"')])[1]";

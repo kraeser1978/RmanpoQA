@@ -1,5 +1,6 @@
 package PageObjects.PersonalCase;
 
+import Common.RegressionTest;
 import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 
@@ -11,7 +12,7 @@ import static PageObjects.PersonalCase.IdentityDocsPage.fileLoadedText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.page;
 
-public class AddPassportPage {
+public class AddPassportPage extends RegressionTest {
     private static Logger logger = Logger.getLogger(AddPassportPage.class.getSimpleName());
     public static String passportSeria = "//span[text()='Серия']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
     String passportNumber = "//span[text()='Номер']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";

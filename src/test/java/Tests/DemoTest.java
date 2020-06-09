@@ -1,31 +1,23 @@
 package Tests;
 
-import Common.Props;
 import Common.RegressionTest;
 import PageObjects.LoginPage;
 import PageObjects.PersonalCase.IdentityDocsPage;
 import PageObjects.PersonalCase.PersonaInfoPage;
-import PageObjects.RmanpoDpoMainPage;
-import PageObjects.RmanpoMainPage;
 import PageObjects.PersonalCase.StudentPersonalCasePage;
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static PageObjects.PersonalCase.StudentPersonalCasePage.selectValueFromInputFile;
 import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.WebDriverRunner.hasWebDriverStarted;
 
 public class DemoTest extends RegressionTest{
     private static Logger logger = Logger.getLogger(DemoTest.class.getSimpleName());
 
     @Test
     public void test01_AddRemoveIdentityDocs() throws Exception {
-        String propsFilePath = System.getenv("Rmanpo_autotest_settings");
-        String paramsFile = FileUtils.readFileToString(new File(propsFilePath), "UTF-8");
-        Props props = new Props(paramsFile);
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
         logger.log(Level.INFO,"переходим на вкладку Документы, удостоверяющие личность");
         IdentityDocsPage identityDocsPage = studentPersonalCasePage.switchToIdentityDocsTab();
@@ -62,43 +54,37 @@ public class DemoTest extends RegressionTest{
 
     @Test
     public void test02_PersonalCaseGeneralInfoPage() throws Exception {
-        String propsFilePath = System.getenv("Rmanpo_autotest_settings");
-        String paramsFile = FileUtils.readFileToString(new File(propsFilePath), "UTF-8");
-        Props props = new Props(paramsFile);
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
 
         logger.log(Level.INFO,"тестируем поля вкладки Общая информация");
-        String originalCampus = studentPersonalCasePage.getCampus();
+        String originalCampus = studentPersonalCasePage.getComboBoxValue("Общежитие");
+        String firstValue = selectValueFromInputFile("Общежитие", 1);
+        String secondValue = selectValueFromInputFile("Общежитие", 2);
 
         logger.log(Level.INFO,"1. поле Общежитие");
-        if (originalCampus.contains("Без общежития")) {
-            studentPersonalCasePage
-                    .clickEditPersonalCaseButton()
-                    //задаем значение поля Общежитие
-                    .setCampus("Общежитие на ул. Смольная")
-                    //сохраняем
-                    .clickSaveCaseButton()
-                    //проверяем, что заданное значение сохранено
-                    .isCampusAdded("Общежитие на ул. Смольная")
-                    .clickEditPersonalCaseButton()
-                    //вводим другое значение
-                    .setCampus("Общежитие на Ленинградском шоссе")
-                    //жмем кнопку Отменить изменения
-                    .clickCancelCaseEditButton()
-                    //проверяем, что при отмене возвращается предыдущее заданное значение
-                    .isCampusAdded("Общежитие на ул. Смольная")
-                    //возвращаем оригинальное значение
-                    .clickEditPersonalCaseButton()
-                    .setCampus(originalCampus)
-                    .clickSaveCaseButton();
-        }
+        studentPersonalCasePage
+                .clickEditPersonalCaseButton()
+                //задаем значение поля Общежитие
+                .setComboBoxValue("Общежитие", firstValue)
+                //сохраняем
+                .clickSaveCaseButton()
+                //проверяем, что заданное значение сохранено
+                .isComboBoxValueAdded("Общежитие", firstValue)
+                .clickEditPersonalCaseButton()
+                //вводим другое значение
+                .setComboBoxValue("Общежитие", secondValue)
+                //жмем кнопку Отменить изменения
+                .clickCancelCaseEditButton()
+                //проверяем, что при отмене возвращается предыдущее заданное значение
+                .isComboBoxValueAdded("Общежитие", firstValue)
+                //возвращаем оригинальное значение
+                .clickEditPersonalCaseButton()
+                .setComboBoxValue("Общежитие", originalCampus)
+                .clickSaveCaseButton();
     }
 
     @Test
     public void test03_PersonalCasePersonalInfoPage() throws Exception {
-        String propsFilePath = System.getenv("Rmanpo_autotest_settings");
-        String paramsFile = FileUtils.readFileToString(new File(propsFilePath), "UTF-8");
-        Props props = new Props(paramsFile);
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
 
         logger.log(Level.INFO,"тестируем поля вкладки Персональная информация");
@@ -106,21 +92,24 @@ public class DemoTest extends RegressionTest{
 
         logger.log(Level.INFO,"1. поле Фамилия");
         String originalFamilyValue = personaInfoPage.getFieldValue("Фамилия");
+        String firstValue = selectValueFromInputFile("Фамилия", 1);
+        String secondValue = selectValueFromInputFile("Фамилия", 2);
+
         personaInfoPage
                     .clickEditPersonalCaseButton()
                     //задаем значение поля Фамилия
-                    .setFieldValue("Фамилия","Пивораки")
+                    .setFieldValue("Фамилия",firstValue)
                     //сохраняем
                     .clickSaveCaseButton()
                     //проверяем, что заданное значение сохранено
-                    .isFieldValueAdded("Фамилия","Пивораки")
+                    .isFieldValueAdded("Фамилия",firstValue)
                     .clickEditPersonalCaseButton()
                     //вводим другое значение
-                    .setFieldValue("Фамилия","Пупкин");
+                    .setFieldValue("Фамилия",secondValue);
                     //жмем кнопку Отменить изменения
                     personaInfoPage.clickCancelCaseEditButton1()
                     //проверяем, что при отмене возвращается предыдущее заданное значение
-                    .isFieldValueAdded("Фамилия","Пивораки")
+                    .isFieldValueAdded("Фамилия",firstValue)
                     //возвращаем оригинальное значение
                     .clickEditPersonalCaseButton()
                     .setFieldValue("Фамилия",originalFamilyValue)
@@ -128,21 +117,24 @@ public class DemoTest extends RegressionTest{
 
         logger.log(Level.INFO,"2. поле Город");
         String originalCityValue = personaInfoPage.getFieldValue("Город");
+        firstValue = selectValueFromInputFile("Город", 1);
+        secondValue = selectValueFromInputFile("Город", 2);
+
         personaInfoPage
                 .clickEditPersonalCaseButton2()
                 //задаем значение поля
-                .setFieldValue("Город","Москва");
+                .setFieldValue("Город",firstValue);
                 //сохраняем
                 personaInfoPage.clickSaveCaseButton2()
                 //проверяем, что заданное значение сохранено
-                .isFieldValueAdded("Город","Москва");
+                .isFieldValueAdded("Город",firstValue);
                 personaInfoPage.clickEditPersonalCaseButton2()
                 //вводим другое значение
-                .setFieldValue("Город","Суздаль");
+                .setFieldValue("Город",secondValue);
                 //жмем кнопку Отменить изменения
                 personaInfoPage.clickCancelCaseEditButton2()
                 //проверяем, что при отмене возвращается предыдущее заданное значение
-                .isFieldValueAdded("Город","Москва");
+                .isFieldValueAdded("Город",firstValue);
                 //возвращаем оригинальное значение
                 personaInfoPage.clickEditPersonalCaseButton2()
                 .setFieldValue("Город",originalCityValue);
@@ -150,21 +142,24 @@ public class DemoTest extends RegressionTest{
 
         logger.log(Level.INFO,"3. поле Должность");
         String originalPositionValue = personaInfoPage.getFieldValue("Должность");
+        firstValue = selectValueFromInputFile("Должность", 1);
+        secondValue = selectValueFromInputFile("Должность", 2);
+
         personaInfoPage
                 .clickEditPersonalCaseButton2()
                 //задаем значение поля
-                .setFieldValue("Должность","Главный специалист");
+                .setFieldValue("Должность",firstValue);
                 //сохраняем
                 personaInfoPage.clickSaveCaseButton2()
                 //проверяем, что заданное значение сохранено
-                .isFieldValueAdded("Должность","Главный специалист");
+                .isFieldValueAdded("Должность",firstValue);
                 personaInfoPage.clickEditPersonalCaseButton2()
                 //вводим другое значение
-                .setFieldValue("Должность","стажер");
+                .setFieldValue("Должность",secondValue);
                 //жмем кнопку Отменить изменения
                 personaInfoPage.clickCancelCaseEditButton2()
                 //проверяем, что при отмене возвращается предыдущее заданное значение
-                .isFieldValueAdded("Должность","Главный специалист");
+                .isFieldValueAdded("Должность",firstValue);
                 //возвращаем оригинальное значение
                 personaInfoPage.clickEditPersonalCaseButton2()
                 .setFieldValue("Должность",originalPositionValue);

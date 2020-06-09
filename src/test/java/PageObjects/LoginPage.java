@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static Common.RegressionTest.SetUp;
+import static Common.RegressionTest.props;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.hasWebDriverStarted;
@@ -39,10 +40,6 @@ public class LoginPage {
     }
 
     public StudentPersonalCasePage main() throws Exception {
-        logger.log(Level.INFO,"считываем параметры проекта из properties файла...");
-        String propsFilePath = System.getenv("Rmanpo_autotest_settings");
-        String paramsFile = FileUtils.readFileToString(new File(propsFilePath), "UTF-8");
-        Props props = new Props(paramsFile);
         boolean checkIfAppStarted = hasWebDriverStarted();
         if (!checkIfAppStarted){
             logger.log(Level.INFO,"запускаем приложение...");

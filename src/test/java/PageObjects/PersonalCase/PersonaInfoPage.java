@@ -2,9 +2,7 @@ package PageObjects.PersonalCase;
 
 import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
-
 import java.util.logging.Logger;
-
 import static com.codeborne.selenide.Selenide.$;
 
 public class PersonaInfoPage extends StudentPersonalCasePage {
