@@ -7,14 +7,15 @@ import PageObjects.PersonalCase.PersonaInfoPage;
 import PageObjects.PersonalCase.StudentPersonalCasePage;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static PageObjects.PersonalCase.StudentPersonalCasePage.selectValueFromInputFile;
 import static com.codeborne.selenide.Selenide.open;
 
-public class DemoTest extends RegressionTest{
-    private static Logger logger = Logger.getLogger(DemoTest.class.getSimpleName());
+public class PersonalCaseTest extends RegressionTest{
+    private static Logger logger = Logger.getLogger(PersonalCaseTest.class.getSimpleName());
 
     @Test
     public void test01_AddRemoveIdentityDocs() throws Exception {
@@ -53,38 +54,89 @@ public class DemoTest extends RegressionTest{
     }
 
     @Test
-    public void test02_PersonalCaseGeneralInfoPage() throws Exception {
+    public void test02_GeneralInfoPage() throws Exception {
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
-
         logger.log(Level.INFO,"тестируем поля вкладки Общая информация");
-        String originalCampus = studentPersonalCasePage.getComboBoxValue("Общежитие");
-        String firstValue = selectValueFromInputFile("Общежитие", 1);
-        String secondValue = selectValueFromInputFile("Общежитие", 2);
 
-        logger.log(Level.INFO,"1. поле Общежитие");
-        studentPersonalCasePage
-                .clickEditPersonalCaseButton()
-                //задаем значение поля Общежитие
-                .setComboBoxValue("Общежитие", firstValue)
-                //сохраняем
-                .clickSaveCaseButton()
-                //проверяем, что заданное значение сохранено
-                .isComboBoxValueAdded("Общежитие", firstValue)
-                .clickEditPersonalCaseButton()
-                //вводим другое значение
-                .setComboBoxValue("Общежитие", secondValue)
-                //жмем кнопку Отменить изменения
-                .clickCancelCaseEditButton()
-                //проверяем, что при отмене возвращается предыдущее заданное значение
-                .isComboBoxValueAdded("Общежитие", firstValue)
-                //возвращаем оригинальное значение
-                .clickEditPersonalCaseButton()
-                .setComboBoxValue("Общежитие", originalCampus)
-                .clickSaveCaseButton();
+        ArrayList<String> fieldTitles = new ArrayList<String>();
+        ArrayList<String> fieldTitlesDisabled = new ArrayList<String>();
+        ArrayList<String> comboBoxTitles = new ArrayList<String>();
+        ArrayList<String> comboBoxTitlesDisabled = new ArrayList<String>();
+        //заполняем массивы списком заголовков полей для проверки редактирования
+        studentPersonalCasePage.clickEditPersonalCaseButton();
+        studentPersonalCasePage.getFieldTitles(fieldTitles);
+        studentPersonalCasePage.getComboBoxTitles(comboBoxTitles);
+        studentPersonalCasePage.getFieldTitlesDisabled(fieldTitlesDisabled);
+        studentPersonalCasePage.getComboBoxTitlesDisabled(comboBoxTitlesDisabled);
+        studentPersonalCasePage.clickCancelCaseEditButton();
+
+        for (int i=0; i < fieldTitles.size();i++){
+            //задаем заголовок поля для ввода
+            String fieldName = fieldTitles.get(i);
+            //считываем оригинальное значение
+            String originalValue = studentPersonalCasePage.getFieldValue(fieldName);
+            //задаем первое значение (которое будет сохранено взамен оригинального)
+            String firstValue = selectValueFromInputFile(fieldName, 1);
+            //задаем второе значение (которое будет подставлено взамен первого измененного, но сохранено не будет)
+            String secondValue = selectValueFromInputFile(fieldName, 2);
+            int p = i + 1;
+            logger.log(Level.INFO, p + ". поле " + fieldName);
+            studentPersonalCasePage
+                    .clickEditPersonalCaseButton()
+                    //задаем значение поля Общежитие
+                    .setFieldValue(fieldName, firstValue)
+                    //сохраняем
+                    .clickSaveCaseButton()
+                    //проверяем, что заданное значение сохранено
+                    .isFieldValueAdded(fieldName, firstValue)
+                    .clickEditPersonalCaseButton()
+                    //вводим другое значение
+                    .setFieldValue(fieldName, secondValue)
+                    //жмем кнопку Отменить изменения
+                    .clickCancelCaseEditButton()
+                    //проверяем, что при отмене возвращается предыдущее заданное значение
+                    .isFieldValueAdded(fieldName, firstValue)
+                    //возвращаем оригинальное значение
+                    .clickEditPersonalCaseButton()
+                    .setFieldValue(fieldName, originalValue)
+                    .clickSaveCaseButton();
+        }
+
+        for (int i=0; i < comboBoxTitles.size();i++){
+            //задаем заголовок поля для ввода
+            String fieldName = comboBoxTitles.get(i);
+            //считываем оригинальное значение
+            String originalValue = studentPersonalCasePage.getComboBoxValue(fieldName);
+            //задаем первое значение (которое будет сохранено взамен оригинального)
+            String firstValue = selectValueFromInputFile(fieldName, 1);
+            //задаем второе значение (которое будет подставлено взамен первого измененного, но сохранено не будет)
+            String secondValue = selectValueFromInputFile(fieldName, 2);
+             int p = i + 1;
+            logger.log(Level.INFO, i + ". поле " + fieldName);
+            studentPersonalCasePage
+                    .clickEditPersonalCaseButton()
+                    //задаем значение поля Общежитие
+                    .setComboBoxValue(fieldName, firstValue)
+                    //сохраняем
+                    .clickSaveCaseButton()
+                    //проверяем, что заданное значение сохранено
+                    .isComboBoxValueAdded(fieldName, firstValue)
+                    .clickEditPersonalCaseButton()
+                    //вводим другое значение
+                    .setComboBoxValue(fieldName, secondValue)
+                    //жмем кнопку Отменить изменения
+                    .clickCancelCaseEditButton()
+                    //проверяем, что при отмене возвращается предыдущее заданное значение
+                    .isComboBoxValueAdded(fieldName, firstValue)
+                    //возвращаем оригинальное значение
+                    .clickEditPersonalCaseButton()
+                    .setComboBoxValue(fieldName, originalValue)
+                    .clickSaveCaseButton();
+        }
     }
 
     @Test
-    public void test03_PersonalCasePersonalInfoPage() throws Exception {
+    public void test03_PersonalInfoPage() throws Exception {
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
 
         logger.log(Level.INFO,"тестируем поля вкладки Персональная информация");

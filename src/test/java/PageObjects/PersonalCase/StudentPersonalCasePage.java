@@ -1,9 +1,7 @@
 package PageObjects.PersonalCase;
 
 import Common.RegressionTest;
-import Tests.DemoTest;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import java.util.ArrayList;
@@ -14,8 +12,6 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class StudentPersonalCasePage extends RegressionTest {
     private static Logger logger = Logger.getLogger(StudentPersonalCasePage.class.getSimpleName());
-    public ArrayList<String> fieldTitles = new ArrayList<String>();
-    public ArrayList<String> comboBoxTitles = new ArrayList<String>();
     String editCase = "(//button[@title='Изменить личное дело'])[1]";
     String cancelCaseEdit = "//button[@title='Отменить изменения']";
     String saveCase = "(//button[@title='Сохранить изменения'])[1]";
@@ -24,13 +20,11 @@ public class StudentPersonalCasePage extends RegressionTest {
         switchTo().window(1);
         //ждем окончания загрузки страницы
         $(By.xpath(editCase)).waitUntil(Condition.enabled,7000);
-        getFieldNames(fieldTitles);
-        getComboBoxNames(comboBoxTitles);
     }
 
     public static String selectValueFromInputFile(String fieldName, int propertySeqNo){
         String result = "";
-        String allFieldValues = dataInput.getProperty(fieldName);
+        String allFieldValues = dataInput.get(fieldName);
         if (propertySeqNo == 1) result = allFieldValues.substring(0,allFieldValues.indexOf(";"));
         else result = allFieldValues.substring(allFieldValues.indexOf(";") + 1);
         return result;
@@ -61,7 +55,26 @@ public class StudentPersonalCasePage extends RegressionTest {
     public StudentPersonalCasePage setComboBoxValue(String fieldName, String fieldValue){
         String comboBoxValueXpath = locators.getProperty("set_combobox_value_template")
                 .replace("''","'" + fieldName + "'");
-        $(By.xpath(comboBoxValueXpath)).shouldBe(Condition.enabled).setValue(fieldValue);
+        //определяем тип комбобокса - с зафиксированными значениями или нет
+        boolean isComboReadOnly = $(By.xpath(comboBoxValueXpath)).has(Condition.attribute("readonly"));
+        if (isComboReadOnly) {
+            //жмем стрелку для раскрытия списка значений
+            String comboBoxDropDownXpath = locators.getProperty("select_dropdown_list_template")
+                    .replace("''","'" + fieldName + "'");
+            $(By.xpath(comboBoxDropDownXpath)).shouldBe(Condition.enabled).click();
+            //выбираем значение
+            String comboBoxDropDownValueXpath = locators.getProperty("select_combobox_value_from_dropdown_template")
+                    .replace("''","'" + fieldValue + "'");
+            //обработка ситуации со спецсимволами вместо пробелов в тексте элемента
+            int specialCharPosition = fieldValue.indexOf(" ");
+            if (specialCharPosition != -1){
+                String firstPartOfValue = fieldValue.substring(0,specialCharPosition);
+                comboBoxDropDownValueXpath = locators.getProperty("select_combobox_partial_value_from_dropdown_template")
+                        .replace("''","'" + firstPartOfValue + "'");
+            }
+            $(By.xpath(comboBoxDropDownValueXpath)).shouldBe(Condition.visible).click();
+        }
+        else $(By.xpath(comboBoxValueXpath)).shouldBe(Condition.enabled).setValue(fieldValue);
         logger.log(Level.INFO,"задаем поле " + fieldName + " = " + fieldValue);
         return this;
     }
@@ -103,6 +116,10 @@ public class StudentPersonalCasePage extends RegressionTest {
 
     public StudentPersonalCasePage clickEditPersonalCaseButton(){
         $(By.xpath(editCase)).shouldBe(Condition.enabled).click();
+        //ждем, когда поле станет доступным для редактирования
+        String checkField = locators.getProperty("set_combobox_value_template")
+                .replace("''","'Общежитие'");
+        $(By.xpath(checkField)).shouldHave(Condition.enabled);
         return this;
     }
 

@@ -1,6 +1,7 @@
 package Common;
 
 import PageObjects.PersonalCase.AddPassportPage;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.io.FileUtils;
@@ -14,9 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,13 +28,12 @@ public class RegressionTest {
     private static Logger logger = Logger.getLogger(RegressionTest.class.getSimpleName());
     protected static WebDriver driver;
     static FileHandler fh = null;
-    public static Properties dataInput = new Properties();
-    public static Set<String> fieldNames;
+    public static HashMap <String,String> dataInput = new HashMap<String, String>();
     public static Properties locators = new Properties();
     public static Set<String> locatorCodes;
     public static Props props;
 
-    public ArrayList<String> getFieldNames(ArrayList<String> titles){
+    public ArrayList<String> getFieldTitles(ArrayList<String> titles){
         String fieldNamesXpath = locators.getProperty("get_input_field_name_template");
         int fieldsCount = $$(By.xpath(fieldNamesXpath)).size();
         for (int i= 0; i < fieldsCount; i++){
@@ -44,13 +42,45 @@ public class RegressionTest {
         return titles;
     }
 
-    public ArrayList<String> getComboBoxNames(ArrayList<String> titles){
+    public ArrayList<String> getFieldTitlesDisabled(ArrayList<String> titlesDisabled){
+        String fieldNamesXpath = locators.getProperty("get_disabled_input_field_name_template");
+        int fieldsCount = $$(By.xpath(fieldNamesXpath)).size();
+        for (int i= 0; i < fieldsCount; i++){
+            titlesDisabled.add($$(By.xpath(fieldNamesXpath)).get(i).getText());
+        }
+        return titlesDisabled;
+    }
+
+    public ArrayList<String> getComboBoxTitles(ArrayList<String> titles){
         String comboBoxNamesXpath = locators.getProperty("get_combobox_name_template");
         int fieldsCount = $$(By.xpath(comboBoxNamesXpath)).size();
         for (int i= 0; i < fieldsCount; i++){
             titles.add($$(By.xpath(comboBoxNamesXpath)).get(i).getText());
         }
         return titles;
+    }
+
+    public ArrayList<String> getComboBoxTitlesDisabled(ArrayList<String> titlesDisabled){
+        String comboBoxNamesXpath = locators.getProperty("get_disabled_combobox_name_template");
+        int fieldsCount = $$(By.xpath(comboBoxNamesXpath)).size();
+        for (int i= 0; i < fieldsCount; i++){
+            titlesDisabled.add($$(By.xpath(comboBoxNamesXpath)).get(i).getText());
+        }
+        return titlesDisabled;
+    }
+
+    public static void readInputDataFile() throws IOException {
+        //считываем датасет
+        String fieldName,fieldValue;
+        String inputDataFilePath = System.getenv("RmanpoQA_personal_case_inputDataFile");
+        List<String> inputDataText = FileUtils.readLines(new File(inputDataFilePath), "UTF-8");
+        String[] a;
+        for (int i=0; i < inputDataText.size();i++){
+            int delim = inputDataText.get(i).indexOf("=");
+            fieldName = inputDataText.get(i).substring(0,delim).trim();
+            fieldValue = inputDataText.get(i).substring(delim + 1).trim();
+            dataInput.put(fieldName,fieldValue);
+        }
     }
 
     public static void SetUp() throws Exception {
@@ -65,10 +95,7 @@ public class RegressionTest {
         locators.load(new StringReader(locatorsText));
         locatorCodes = locators.stringPropertyNames();
         //считываем датасет
-        String inputDataFilePath = System.getenv("RmanpoQA_personal_case_inputDataFile");
-        String inputDataText = FileUtils.readFileToString(new File(inputDataFilePath), "UTF-8");
-        dataInput.load(new StringReader(inputDataText));
-        fieldNames = dataInput.stringPropertyNames();
+        readInputDataFile();
         //задаем режим логирования сообщений в лог файл
         logInit(props.logFilePath());
         //задаем путь к файлам скриншотов с ошибками в ходе выполнения тестов
