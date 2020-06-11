@@ -6,6 +6,7 @@ import PageObjects.PersonalCase.AddPassportPage;
 import PageObjects.PersonalCase.StudentPersonalCasePage;
 import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
@@ -14,28 +15,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static Common.RegressionTest.*;
-import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.Selenide.page;
+import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.hasWebDriverStarted;
 
 public class LoginPage extends RegressionTest {
     private static Logger logger = Logger.getLogger(LoginPage.class.getSimpleName());
+    String userNameXpath = locators.getProperty("user_name");
+    String userPasswordXpath = locators.getProperty("user_password");
+    String loginButtonXpath = locators.getProperty("login_button");
 
-    @FindBy(how = How.XPATH, using = "//input[@name='username']")
-    private SelenideElement userName;
+    public void enterUserName(String userNameValue){ $(By.xpath(userNameXpath)).setValue(userNameValue); }
 
-    @FindBy(how = How.XPATH, using = "//input[@name='password']")
-    private SelenideElement userPass;
-
-    @FindBy(how = How.XPATH, using = "//button[@type='submit' and text()='Войти']")
-    private SelenideElement loginButton;
-
-    public void enterUserName(String userNameValue){ userName.setValue(userNameValue);}
-
-    public void enterUserPass(String userPassValue){ userPass.setValue(userPassValue);}
+    public void enterUserPass(String userPassValue){ $(By.xpath(userPasswordXpath)).setValue(userPassValue);}
 
     public RmanpoMainPage clickLoginButton(){
-        loginButton.click();
+        $(By.xpath(loginButtonXpath)).click();
         return page(RmanpoMainPage.class);
     }
 

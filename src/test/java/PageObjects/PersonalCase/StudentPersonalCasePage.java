@@ -123,7 +123,10 @@ public class StudentPersonalCasePage extends RegressionTest {
     public StudentPersonalCasePage clickEditPersonalCaseButton(){
         $(By.xpath(editCaseButton)).shouldBe(Condition.enabled).click();
         //ждем, когда поля станут доступными для редактирования
-        String checkFieldsEnabled = locators.getProperty("get_combobox_name_template");
+        String checkComboxEnabled = locators.getProperty("get_combobox_name_template");
+        $$(By.xpath(checkComboxEnabled )).shouldHave(CollectionCondition.sizeGreaterThan(0));
+        //ждем, когда поля станут доступными для редактирования
+        String checkFieldsEnabled = locators.getProperty("get_input_field_name_template");
         $$(By.xpath(checkFieldsEnabled)).shouldHave(CollectionCondition.sizeGreaterThan(0));
         return this;
     }

@@ -1,9 +1,11 @@
 package PageObjects.PersonalCase;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 import java.util.logging.Logger;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 public class PersonaInfoPage extends StudentPersonalCasePage {
     private static Logger logger = Logger.getLogger(PersonaInfoPage.class.getSimpleName());
@@ -35,6 +37,12 @@ public class PersonaInfoPage extends StudentPersonalCasePage {
 
     public PersonaInfoPage clickEditPersonalCaseButton2(){
         $(By.xpath(editCaseButton2)).shouldBe(Condition.enabled).click();
+        //ждем, когда поля станут доступными для редактирования
+        String checkComboxEnabled = locators.getProperty("get_combobox_name_template");
+        $$(By.xpath(checkComboxEnabled )).shouldHave(CollectionCondition.sizeGreaterThan(0));
+        //ждем, когда поля станут доступными для редактирования
+        String checkFieldsEnabled = locators.getProperty("get_input_field_name_template");
+        $$(By.xpath(checkFieldsEnabled)).shouldHave(CollectionCondition.sizeGreaterThan(0));
         return this;
     }
 

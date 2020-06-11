@@ -5,6 +5,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.openqa.selenium.By;
@@ -32,8 +33,40 @@ public class RegressionTest {
     public static Properties locators = new Properties();
     public static Set<String> locatorCodes;
     public static Props props;
+    public int dublicateFieldNameSeqNum;
+    public int dublicateComboBoxNameSeqNum;
 
-    public ArrayList<String> getFieldTitles(ArrayList<String> titles){
+    public ArrayList<String> getNameDuplicate(ArrayList<String> names){
+        HashSet<String> set = new HashSet<String>(names);
+        ArrayList<String> noDuplicateNames = new ArrayList<String>(set);
+        ArrayList<String> duplicateNames = new ArrayList<String>();
+        for (int i = 0; i < names.size(); i++) {
+            for (int j = i + 1; j < names.size(); j++) {
+                if (names.get(i).equalsIgnoreCase(names.get(j))) {
+                    duplicateNames.add(names.get(i));
+                }
+            }
+        }
+        return duplicateNames;
+    }
+
+    public ArrayList<String> getUniqueName(ArrayList<String> names){
+        //сортируем массив, чтобы дубликаты были рядом
+        Collections.sort(names);
+        for (int i = 0; i < names.size(); i++) {
+            for (int j = i + 1; j < names.size(); j++) {
+                while (names.get(i).equalsIgnoreCase(names.get(j))) {
+                    //удаляем оба одинаковых соседних имени
+                    names.remove(i);
+                    names.remove(i);
+                }
+            }
+        }
+        return names;
+    }
+
+    public ArrayList<String> getFieldTitles(){
+        ArrayList<String> titles = new ArrayList<String>();
         String fieldNamesXpath = locators.getProperty("get_input_field_name_template");
         int fieldsCount = $$(By.xpath(fieldNamesXpath)).size();
         for (int i= 0; i < fieldsCount; i++){
@@ -42,7 +75,8 @@ public class RegressionTest {
         return titles;
     }
 
-    public ArrayList<String> getFieldTitlesDisabled(ArrayList<String> titlesDisabled){
+    public ArrayList<String> getFieldTitlesDisabled(){
+        ArrayList<String> titlesDisabled = new ArrayList<String>();
         String fieldNamesXpath = locators.getProperty("get_disabled_input_field_name_template");
         int fieldsCount = $$(By.xpath(fieldNamesXpath)).size();
         for (int i= 0; i < fieldsCount; i++){
@@ -51,7 +85,8 @@ public class RegressionTest {
         return titlesDisabled;
     }
 
-    public ArrayList<String> getComboBoxTitles(ArrayList<String> titles){
+    public ArrayList<String> getComboBoxTitles(){
+        ArrayList<String> titles = new ArrayList<String>();
         String comboBoxNamesXpath = locators.getProperty("get_combobox_name_template");
         int fieldsCount = $$(By.xpath(comboBoxNamesXpath)).size();
         for (int i= 0; i < fieldsCount; i++){
@@ -60,7 +95,8 @@ public class RegressionTest {
         return titles;
     }
 
-    public ArrayList<String> getComboBoxTitlesDisabled(ArrayList<String> titlesDisabled){
+    public ArrayList<String> getComboBoxTitlesDisabled(){
+        ArrayList<String> titlesDisabled = new ArrayList<String>();
         String comboBoxNamesXpath = locators.getProperty("get_disabled_combobox_name_template");
         int fieldsCount = $$(By.xpath(comboBoxNamesXpath)).size();
         for (int i= 0; i < fieldsCount; i++){
