@@ -14,48 +14,49 @@ import static com.codeborne.selenide.Selenide.page;
 
 public class AddPassportPage extends RegressionTest {
     private static Logger logger = Logger.getLogger(AddPassportPage.class.getSimpleName());
-    public static String passportSeria = "//span[text()='Серия']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
-    String passportNumber = "//span[text()='Номер']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
-    String passportDateOfIssue = "//span[text()='Дата выдачи']//parent::td/following-sibling::td/span/input[contains(@class,'datebox')]";
-    String passportDivisionCode = "//span[text()='Код подразделения']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
-    String passportIssuer = "//span[text()='Кем выдан']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
-    String permanentRegistration = "//span[text()='Место постоянной регистрации']//parent::td/following-sibling::td/input[contains(@class,'textbox')]";
-    String fileUploadButton = "//a[@title='Загрузить файлы']";
-    String uploadPath = "//input[@name='file' and @type='file']";
-    String saveButton = "//button[text()='Сохранить']";
+    public static String passportSeria = locators.getProperty("passport_input_field_template").replace("''","'Серия'");
+    String passportNumber = locators.getProperty("passport_input_field_template").replace("''","'Номер'");
+    String passportDateOfIssue = locators.getProperty("passport_date_field_template").replace("''","'Дата выдачи'");
+    String passportDivisionCode = locators.getProperty("passport_input_field_template").replace("''","'Код подразделения'");
+    String passportIssuer = locators.getProperty("passport_input_field_template").replace("''","'Кем выдан'");
+    String permanentRegistration = locators.getProperty("passport_input_field_template").replace("''","'Место постоянной регистрации'");
+    String fileUploadButton = locators.getProperty("fileUploadButton");
+    String uploadPath = locators.getProperty("uploadPath");
+    String saveButton = locators.getProperty("saveButton");
 
     public AddPassportPage(){
-        $(By.xpath("//span[text()='Необходимо прикрепить отсканированный паспорт, содержащий основную страницу и страницу с пропиской']"))
-                .shouldBe(Condition.visible);
+        String warningText = locators.getProperty("text_template")
+                .replace("''","'Необходимо прикрепить отсканированный паспорт, содержащий основную страницу и страницу с пропиской'");
+        $(By.xpath(warningText)).shouldBe(Condition.visible);
     }
 
     public AddPassportPage setPassportSeria(){
-        $(By.xpath(passportSeria)).shouldBe(Condition.enabled).setValue("4604");
+        $(By.xpath(passportSeria)).shouldBe(Condition.enabled).setValue(dataInput.get("Серия"));
         return this;
     }
 
     public AddPassportPage setPassportNumber(){
-        $(By.xpath(passportNumber)).shouldBe(Condition.enabled).setValue("958995");
+        $(By.xpath(passportNumber)).shouldBe(Condition.enabled).setValue(dataInput.get("Номер"));
         return this;
     }
 
     public AddPassportPage setPassportDateOfIssue(){
-        $(By.xpath(passportDateOfIssue)).shouldBe(Condition.enabled).setValue("15.07.2003");
+        $(By.xpath(passportDateOfIssue)).shouldBe(Condition.enabled).setValue(dataInput.get("Дата выдачи"));
         return this;
     }
 
     public AddPassportPage setPassportDivisionCode(){
-        $(By.xpath(passportDivisionCode)).shouldBe(Condition.enabled).setValue("503-034");
+        $(By.xpath(passportDivisionCode)).shouldBe(Condition.enabled).setValue(dataInput.get("Код подразделения"));
         return this;
     }
 
     public AddPassportPage setPassportIssuer(){
-        $(By.xpath(passportIssuer)).shouldBe(Condition.enabled).setValue("Коломенским УВД Московской обл.");
+        $(By.xpath(passportIssuer)).shouldBe(Condition.enabled).setValue(dataInput.get("Кем выдан"));
         return this;
     }
 
     public AddPassportPage setPermanentRegistration(){
-        $(By.xpath(permanentRegistration)).shouldBe(Condition.enabled).setValue("127224, г. Москва, пр-д Шокальского, д.63, кв.32");
+        $(By.xpath(permanentRegistration)).shouldBe(Condition.enabled).setValue(dataInput.get("Место постоянной регистрации"));
         return this;
     }
 
@@ -68,7 +69,7 @@ public class AddPassportPage extends RegressionTest {
         File file = new File(fullFileName);
         $(By.xpath(uploadPath)).uploadFile(file);
         logger.log(Level.INFO,"ждем окончания загрузки файла...");
-        $(By.xpath("//span[contains(text(),'Размер файла')]")).waitWhile(Condition.visible,7000);
+        $(By.xpath(locators.getProperty("waitFileUploadMessage"))).waitWhile(Condition.visible,7000);
         Thread.sleep(1000);
         return this;
     }

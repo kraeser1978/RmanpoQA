@@ -7,16 +7,19 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class PersonaInfoPage extends StudentPersonalCasePage {
     private static Logger logger = Logger.getLogger(PersonaInfoPage.class.getSimpleName());
-    String countryResidence = "//span[text()='Гражданство']//parent::div/following-sibling::div/span/input[contains(@class,'combobox-input')]";
-    String position = "//span[text()='Должность']//parent::div/following-sibling::div/input";
-    String cancelEditButton1 = "(//button[@title='Отменить изменения'])[1]";
-    String cancelEditButton2 = "(//button[@title='Отменить изменения'])[2]";
-    String saveCaseButton2 = "(//button[@title='Сохранить изменения'])[2]";
-    String editCaseButton2 = "(//button[@title='Изменить личное дело'])[2]";
+    String countryResidence = locators.getProperty("set_combobox_value_template").replace("''","'Гражданство'");
+    String position = locators.getProperty("set_input_field_value_template").replace("''","'Должность'");;
+    String cancelEditButton1 = locators.getProperty("click_sequential_button_template").replace("''","'Отменить изменения'");
+    String cancelEditButton2 = locators.getProperty("click_sequential_button_template")
+        .replace("''","'Отменить изменения'").replace("[1]","[2]");
+    String saveCaseButton2 = locators.getProperty("click_sequential_button_template")
+        .replace("''","'Сохранить изменения'").replace("[1]","[2]");
+    String editCaseButton2 = locators.getProperty("click_sequential_button_template")
+        .replace("''","'Изменить личное дело'").replace("[1]","[2]");
 
     public PersonaInfoPage(){
         //ждем окончания загрузки страницы
-        $(By.xpath(editCase)).waitUntil(Condition.enabled,7000);
+        $(By.xpath(editCaseButton)).waitUntil(Condition.enabled,7000);
     }
 
     public PersonaInfoPage setCountryResidence(String countryName){
@@ -39,7 +42,6 @@ public class PersonaInfoPage extends StudentPersonalCasePage {
         $(By.xpath(cancelEditButton1)).shouldBe(Condition.enabled).click();
         //ждем, когда поле станет закрытым для редактирования
         $(By.xpath(countryResidence)).shouldHave(Condition.disabled);
-//        Thread.sleep(300);
         return this;
     }
 
@@ -47,7 +49,6 @@ public class PersonaInfoPage extends StudentPersonalCasePage {
         $(By.xpath(cancelEditButton2)).shouldBe(Condition.enabled).click();
         //ждем, когда поле станет закрытым для редактирования
         $(By.xpath(position)).shouldHave(Condition.disabled);
-//        Thread.sleep(300);
         return this;
     }
 

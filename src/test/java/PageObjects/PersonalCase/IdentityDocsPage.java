@@ -15,10 +15,10 @@ import static com.codeborne.selenide.Selenide.page;
 
 public class IdentityDocsPage extends RegressionTest {
     private static Logger logger = Logger.getLogger(IdentityDocsPage.class.getSimpleName());
-    String addDocs = "(//span[text()='Добавить документ'])[1]";
-    String residenceText = "(//span[contains(text(),'Заполните поле \"Гражданство\"')])[1]";
-    public static String fileLoadedText = "//span[text()='Загруженные файлы']";
-    String passportAdded = "//input[contains(@class,'textbox-disabled') and @value='passport_SKraevskiy_02.pdf']";
+    String addDocs = locators.getProperty("text_template").replace("''","'Добавить документ'");
+    String residenceText = locators.getProperty("residenceText");
+    public static String fileLoadedText = locators.getProperty("text_template").replace("''","'Загруженные файлы'");
+    String passportAdded = locators.getProperty("passportAdded");
 
     public IdentityDocsPage(){
         $(By.xpath(addDocs)).shouldBe(Condition.visible);
@@ -32,16 +32,17 @@ public class IdentityDocsPage extends RegressionTest {
     }
 
     public IdentityDocsPage clickRemoveDocButton(){
-        $(By.xpath("//a[@title='Удалить документ']")).shouldBe(Condition.enabled).click();
-        $(By.xpath("//span[text()='Удалить документ и все его файлы?']")).shouldBe(Condition.visible);
-        $(By.xpath("//button[text()='ОК']")).shouldBe(Condition.enabled).click();
+        $(By.xpath(locators.getProperty("remove_passport_button"))).shouldBe(Condition.enabled).click();
+        $(By.xpath(locators.getProperty("remove_passport_confirmation_text"))).shouldBe(Condition.visible);
+        String okButtonXpath = locators.getProperty("remove_passport_confirmation_button");
+        $(By.xpath(okButtonXpath)).shouldBe(Condition.enabled).click();
         $(By.xpath(fileLoadedText)).shouldNotBe(Condition.visible);
         return this;
     }
 
     public IdentityDocsPage clickAddDocsButton(){
         $(By.xpath(addDocs)).shouldBe(Condition.enabled);
-        $(By.xpath(addDocs+"//following-sibling::div")).shouldBe(Condition.enabled);
+        $(By.xpath(addDocs + "//following-sibling::div")).shouldBe(Condition.enabled);
         $(By.xpath(addDocs)).click();
         return this;
     }
@@ -49,7 +50,7 @@ public class IdentityDocsPage extends RegressionTest {
     public boolean isResidenceTextDisplayed(){ return $(By.xpath(residenceText)).isDisplayed(); }
 
     public AddPassportPage selectPassportRFOption(){
-        $(By.xpath("//span[contains(@class,'menuitem-text') and text()='Паспорт гражданина РФ']")).shouldBe(Condition.enabled).click();
+        $(By.xpath(locators.getProperty("select_passport_option"))).shouldBe(Condition.enabled).click();
         return page(AddPassportPage.class);
     }
 

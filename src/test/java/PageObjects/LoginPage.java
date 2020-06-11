@@ -1,6 +1,7 @@
 package PageObjects;
 
 import Common.Props;
+import Common.RegressionTest;
 import PageObjects.PersonalCase.AddPassportPage;
 import PageObjects.PersonalCase.StudentPersonalCasePage;
 import com.codeborne.selenide.SelenideElement;
@@ -12,22 +13,21 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static Common.RegressionTest.SetUp;
-import static Common.RegressionTest.props;
+import static Common.RegressionTest.*;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.page;
 import static com.codeborne.selenide.WebDriverRunner.hasWebDriverStarted;
 
-public class LoginPage {
+public class LoginPage extends RegressionTest {
     private static Logger logger = Logger.getLogger(LoginPage.class.getSimpleName());
 
-    @FindBy(how = How.XPATH, using ="//input[@name='username']")
+    @FindBy(how = How.XPATH, using = "//input[@name='username']")
     private SelenideElement userName;
 
-    @FindBy(how = How.XPATH, using ="//input[@name='password']")
+    @FindBy(how = How.XPATH, using = "//input[@name='password']")
     private SelenideElement userPass;
 
-    @FindBy(how = How.XPATH, using ="//button[@type='submit' and text()='Войти']")
+    @FindBy(how = How.XPATH, using = "//button[@type='submit' and text()='Войти']")
     private SelenideElement loginButton;
 
     public void enterUserName(String userNameValue){ userName.setValue(userNameValue);}

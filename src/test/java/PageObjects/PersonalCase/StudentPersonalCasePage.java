@@ -1,10 +1,10 @@
 package PageObjects.PersonalCase;
 
 import Common.RegressionTest;
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import org.openqa.selenium.By;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,14 +12,14 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class StudentPersonalCasePage extends RegressionTest {
     private static Logger logger = Logger.getLogger(StudentPersonalCasePage.class.getSimpleName());
-    String editCase = "(//button[@title='Изменить личное дело'])[1]";
-    String cancelCaseEdit = "//button[@title='Отменить изменения']";
-    String saveCase = "(//button[@title='Сохранить изменения'])[1]";
+    String editCaseButton = locators.getProperty("click_sequential_button_template").replace("''","'Изменить личное дело'");
+    String cancelCaseEditButton = locators.getProperty("click_single_button_template").replace("''","'Отменить изменения'");
+    String saveCaseButton = locators.getProperty("click_sequential_button_template").replace("''","'Сохранить изменения'");
 
     public StudentPersonalCasePage(){
         switchTo().window(1);
         //ждем окончания загрузки страницы
-        $(By.xpath(editCase)).waitUntil(Condition.enabled,7000);
+        $(By.xpath(editCaseButton)).waitUntil(Condition.enabled,7000);
     }
 
     public static String selectValueFromInputFile(String fieldName, int propertySeqNo){
@@ -100,31 +100,36 @@ public class StudentPersonalCasePage extends RegressionTest {
     }
 
     public PersonaInfoPage switchToPersonaInfoTab(){
-        $(By.xpath("//span[text()='Персональная информация']")).click();
+        String personalInfoTabXpath = locators.getProperty("tab_template")
+                .replace("''","'Персональная информация'");
+        $(By.xpath(personalInfoTabXpath)).click();
         return page(PersonaInfoPage.class);
     }
 
     public IdentityDocsPage switchToIdentityDocsTab(){
-        $(By.xpath("//span[text()='Документы, удостоверяющие личность']")).click();
+        String identityDocsTabXpath = locators.getProperty("tab_template")
+                .replace("''","'Документы, удостоверяющие личность'");
+        $(By.xpath(identityDocsTabXpath)).click();
         return page(IdentityDocsPage.class);
     }
 
     public EducationDocsPage switchToEducationDocsTab(){
-        $(By.xpath("//span[text()='Документы об образовании']")).click();
+        String educationDocsTabXpath = locators.getProperty("tab_template")
+                .replace("''","'Документы об образовании'");
+        $(By.xpath(educationDocsTabXpath)).click();
         return page(EducationDocsPage.class);
     }
 
     public StudentPersonalCasePage clickEditPersonalCaseButton(){
-        $(By.xpath(editCase)).shouldBe(Condition.enabled).click();
-        //ждем, когда поле станет доступным для редактирования
-        String checkField = locators.getProperty("set_combobox_value_template")
-                .replace("''","'Общежитие'");
-        $(By.xpath(checkField)).shouldHave(Condition.enabled);
+        $(By.xpath(editCaseButton)).shouldBe(Condition.enabled).click();
+        //ждем, когда поля станут доступными для редактирования
+        String checkFieldsEnabled = locators.getProperty("get_combobox_name_template");
+        $$(By.xpath(checkFieldsEnabled)).shouldHave(CollectionCondition.sizeGreaterThan(0));
         return this;
     }
 
     public StudentPersonalCasePage clickCancelCaseEditButton(){
-        $(By.xpath(cancelCaseEdit)).shouldBe(Condition.enabled).click();
+        $(By.xpath(cancelCaseEditButton)).shouldBe(Condition.enabled).click();
         //ждем, когда поле станет закрытым для редактирования
         String checkField = locators.getProperty("set_combobox_value_template")
                 .replace("''","'Общежитие'");
@@ -133,7 +138,7 @@ public class StudentPersonalCasePage extends RegressionTest {
     }
 
     public StudentPersonalCasePage clickSaveCaseButton(){
-        $(By.xpath(saveCase)).shouldBe(Condition.enabled).click();
+        $(By.xpath(saveCaseButton)).shouldBe(Condition.enabled).click();
         return this;
     }
 }

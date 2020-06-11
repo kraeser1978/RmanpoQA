@@ -18,7 +18,7 @@ public class PersonalCaseTest extends RegressionTest{
     private static Logger logger = Logger.getLogger(PersonalCaseTest.class.getSimpleName());
 
     @Test
-    public void test01_AddRemoveIdentityDocs() throws Exception {
+    public void test01_AddRemove_Passport() throws Exception {
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
         logger.log(Level.INFO,"переходим на вкладку Документы, удостоверяющие личность");
         IdentityDocsPage identityDocsPage = studentPersonalCasePage.switchToIdentityDocsTab();
@@ -54,7 +54,7 @@ public class PersonalCaseTest extends RegressionTest{
     }
 
     @Test
-    public void test02_GeneralInfoPage() throws Exception {
+    public void test02_Edit_All_Fields_GeneralInfoPage() throws Exception {
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
         logger.log(Level.INFO,"тестируем поля вкладки Общая информация");
 
@@ -136,7 +136,7 @@ public class PersonalCaseTest extends RegressionTest{
     }
 
     @Test
-    public void test03_PersonalInfoPage() throws Exception {
+    public void test03_Edit_Some_Fields_PersonalInfoPage() throws Exception {
         StudentPersonalCasePage studentPersonalCasePage = new LoginPage().main();
 
         logger.log(Level.INFO,"тестируем поля вкладки Персональная информация");
