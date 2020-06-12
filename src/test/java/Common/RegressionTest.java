@@ -33,8 +33,6 @@ public class RegressionTest {
     public static Properties locators = new Properties();
     public static Set<String> locatorCodes;
     public static Props props;
-    public int dublicateFieldNameSeqNum;
-    public int dublicateComboBoxNameSeqNum;
 
     public ArrayList<String> getNameDuplicate(ArrayList<String> names){
         HashSet<String> set = new HashSet<String>(names);
@@ -65,7 +63,7 @@ public class RegressionTest {
         return names;
     }
 
-    public ArrayList<String> getFieldTitles(){
+    public ArrayList<String> getFieldTitlesEnabled(){
         ArrayList<String> titles = new ArrayList<String>();
         String fieldNamesXpath = locators.getProperty("get_input_field_name_template");
         int fieldsCount = $$(By.xpath(fieldNamesXpath)).size();
@@ -85,7 +83,7 @@ public class RegressionTest {
         return titlesDisabled;
     }
 
-    public ArrayList<String> getComboBoxTitles(){
+    public ArrayList<String> getComboBoxTitlesEnabled(){
         ArrayList<String> titles = new ArrayList<String>();
         String comboBoxNamesXpath = locators.getProperty("get_combobox_name_template");
         int fieldsCount = $$(By.xpath(comboBoxNamesXpath)).size();

@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.$$;
 public class PersonaInfoPage extends StudentPersonalCasePage {
     private static Logger logger = Logger.getLogger(PersonaInfoPage.class.getSimpleName());
     String countryResidence = locators.getProperty("set_combobox_value_template").replace("''","'Гражданство'");
-    String position = locators.getProperty("set_input_field_value_template").replace("''","'Должность'");;
+    String email = locators.getProperty("set_input_field_value_template").replace("''","'Электронный адрес'");;
     String cancelEditButton1 = locators.getProperty("click_sequential_button_template").replace("''","'Отменить изменения'");
     String cancelEditButton2 = locators.getProperty("click_sequential_button_template")
         .replace("''","'Отменить изменения'").replace("[1]","[2]");
@@ -37,12 +37,8 @@ public class PersonaInfoPage extends StudentPersonalCasePage {
 
     public PersonaInfoPage clickEditPersonalCaseButton2(){
         $(By.xpath(editCaseButton2)).shouldBe(Condition.enabled).click();
-        //ждем, когда поля станут доступными для редактирования
-        String checkComboxEnabled = locators.getProperty("get_combobox_name_template");
-        $$(By.xpath(checkComboxEnabled )).shouldHave(CollectionCondition.sizeGreaterThan(0));
-        //ждем, когда поля станут доступными для редактирования
-        String checkFieldsEnabled = locators.getProperty("get_input_field_name_template");
-        $$(By.xpath(checkFieldsEnabled)).shouldHave(CollectionCondition.sizeGreaterThan(0));
+        //ждем, когда загрузятся поля и комбобоксы
+        waitTillEnabledElementsAreLoaded();
         return this;
     }
 
@@ -56,7 +52,7 @@ public class PersonaInfoPage extends StudentPersonalCasePage {
     public PersonaInfoPage clickCancelCaseEditButton2() throws InterruptedException {
         $(By.xpath(cancelEditButton2)).shouldBe(Condition.enabled).click();
         //ждем, когда поле станет закрытым для редактирования
-        $(By.xpath(position)).shouldHave(Condition.disabled);
+        $(By.xpath(email)).shouldHave(Condition.disabled);
         return this;
     }
 

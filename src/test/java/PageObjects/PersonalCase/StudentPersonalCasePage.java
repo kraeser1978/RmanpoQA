@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Selenide.*;
 
 public class StudentPersonalCasePage extends RegressionTest {
@@ -30,6 +31,21 @@ public class StudentPersonalCasePage extends RegressionTest {
         return result;
     }
 
+    public String getCheckBoxValue(String fieldName){
+        String fieldValueXpath = locators.getProperty("set_checkbox_value_template")
+                .replace("''","'" + fieldName + "'");
+        String fieldValue = $(By.xpath(fieldValueXpath)).getAttribute("value");
+        String text = $(By.xpath(fieldValueXpath)).getText();
+        return fieldValue;
+    }
+
+    public String getDateBoxValue(String fieldName){
+        String fieldValueXpath = locators.getProperty("set_datebox_value_template")
+                .replace("''","'" + fieldName + "'");
+        String fieldValue = $(By.xpath(fieldValueXpath)).getAttribute("value");
+        return fieldValue;
+    }
+
     public String getFieldValue(String fieldName){
         String fieldValueXpath = locators.getProperty("set_input_field_value_template")
                 .replace("''","'" + fieldName + "'");
@@ -42,6 +58,14 @@ public class StudentPersonalCasePage extends RegressionTest {
                 .replace("''","'" + fieldName + "'");
         String comboBoxValue = $(By.xpath(comboBoxValueXpath)).getAttribute("value");
         return comboBoxValue;
+    }
+
+    public StudentPersonalCasePage setDateBoxValue(String fieldName, String fieldValue){
+        String fieldValueXpath = locators.getProperty("set_datebox_value_template")
+                .replace("''","'" + fieldName + "'");
+        $(By.xpath(fieldValueXpath)).shouldBe(Condition.enabled).setValue(fieldValue);
+        logger.log(Level.INFO,"задаем поле " + fieldName + " = " + fieldValue);
+        return this;
     }
 
     public StudentPersonalCasePage setFieldValue(String fieldName, String fieldValue){
@@ -87,6 +111,12 @@ public class StudentPersonalCasePage extends RegressionTest {
         }
     }
 
+    public StudentPersonalCasePage isDateBoxValueAdded(String fieldName, String expectedValue){
+        String actualValue = getDateBoxValue(fieldName);
+        compareFieldValues(fieldName, actualValue, expectedValue);
+        return this;
+    }
+
     public StudentPersonalCasePage isFieldValueAdded(String fieldName, String expectedValue){
         String actualValue = getFieldValue(fieldName);
         compareFieldValues(fieldName, actualValue, expectedValue);
@@ -120,14 +150,27 @@ public class StudentPersonalCasePage extends RegressionTest {
         return page(EducationDocsPage.class);
     }
 
-    public StudentPersonalCasePage clickEditPersonalCaseButton(){
-        $(By.xpath(editCaseButton)).shouldBe(Condition.enabled).click();
-        //ждем, когда поля станут доступными для редактирования
-        String checkComboxEnabled = locators.getProperty("get_combobox_name_template");
-        $$(By.xpath(checkComboxEnabled )).shouldHave(CollectionCondition.sizeGreaterThan(0));
-        //ждем, когда поля станут доступными для редактирования
+    public void waitTillAllElementsAreLoaded(int numOfFields,int numOfCombos){
+        //ждем окончания загрузки всех полей (список полей считывался до нажатия кнопки Редактировать)
+        String checkFields = locators.getProperty("get_all_input_field_name_template");
+        $$(By.xpath(checkFields)).shouldHave(size(numOfFields));
+        String checkCombox = locators.getProperty("get_all_combobox_name_template");
+        $$(By.xpath(checkCombox)).shouldHave(size(numOfCombos));
+    }
+
+    public void waitTillEnabledElementsAreLoaded(){
+        //ждем окончания загрузки только тех полей, которые доступны для редактирования
         String checkFieldsEnabled = locators.getProperty("get_input_field_name_template");
         $$(By.xpath(checkFieldsEnabled)).shouldHave(CollectionCondition.sizeGreaterThan(0));
+        //те же действия для комбобоксов ввода
+        String checkComboxEnabled = locators.getProperty("get_combobox_name_template");
+        $$(By.xpath(checkComboxEnabled)).shouldHave(CollectionCondition.sizeGreaterThan(0));
+    }
+
+    public StudentPersonalCasePage clickEditPersonalCaseButton(){
+        $(By.xpath(editCaseButton)).shouldBe(Condition.enabled).click();
+        //ждем, когда загрузятся поля и комбобоксы
+        waitTillEnabledElementsAreLoaded();
         return this;
     }
 
