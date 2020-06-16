@@ -45,9 +45,11 @@ IntellijIdea:
 
 
 Дополнительные настройки проекта:
-- в Windows создайте новую переменную среды для вашего Windows аккаунта с именем Rmanpo_autotest_settings
+- в Windows создайте новые переменные среды для вашего Windows аккаунта: Rmanpo_autotest_settings, RmanpoQA_personal_case_inputDataFile, RmanpoQA_personal_case_locators
 - скопируйте файл rmanpo.properties из выгруженных файлов проекта в какую-либо папку с полным доступом, находящуюся не в папке проекта
-- пропишите полный путь к файлу в качестве значения переменной среды Rmanpo_autotest_settings
+- пропишите полный путь к файлу в переменную среды Rmanpo_autotest_settings
+- пропишите полный путь к файлу с инпут значениями полей personal_case_input_data.txt в переменную среды RmanpoQA_personal_case_inputDataFile
+- пропишите полный путь к файлу с локаторами personal_case_locators.properties в переменную среды RmanpoQA_personal_case_locators
 - создайте отдельную папку с правами на запись для хранения лог файлов проекта
 - создайте отдельную папку с правами на запись для хранения скриншотов ошибок
 
@@ -69,8 +71,8 @@ IntellijIdea:
 Запуск автотестов
 
 - Откройте проект в IntellijIdea
-- В дереве компонентов слева выберите src - test - java - Tests - откройте класс DemoTest 
-- Нажмите стрелку напротив строки public void test01_AddIdentityDocs() throws Exception
+- В дереве компонентов слева выберите src - test - java - Tests - откройте класс PersonalCaseTest 
+- Нажмите стрелку напротив строки public void test01_
 - дождитесь окончания выполнения автотеста
 - проанализируйте результаты теста в консоли IntellijIdea и содержимое в папке скриншотов
 
